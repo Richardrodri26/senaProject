@@ -1,17 +1,24 @@
 "use client"
 import { BasicFormProviderZod, ButtonForm } from "@/components/Form"
-import { loginSchema } from "../schemas"
+import { loginSchema, loginSchemaType } from "../schemas"
 import { InputForm } from "@/composables/FormInputs"
 import { Label } from "@radix-ui/react-label"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { authenticate } from "@/actions"
+import { registerUser } from "@/actions/auth/register"
 
 
 export const LoginForm = () => {
   const router = useRouter()
+  const pathname = usePathname()
 
-  const onSubmit = async () => {
-    router.push("/home")
+  const onSubmit = async (data: loginSchemaType) => {
+    // await authenticate("", { ...data, callbackUrl: pathname })
+    // await authenticate({ ...data, callbackUrl: pathname })
+    await registerUser("Richard", "richard@gmail.com", "123456")
+
+    // router.push("/home")
   }
 
   return (
