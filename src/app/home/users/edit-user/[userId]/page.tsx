@@ -10,23 +10,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { HeaderPageAddUser } from "@/features/users/elements/HeaderPage"
+import { HeaderPageEditUser } from "@/features/users/elements/HeaderPage"
 import Link from "next/link"
-import { CreateUserForm } from "@/features/users/Forms/CreateUserForm"
 import { CheckBoxForm, InputForm, SelectForm } from "@/composables/FormInputs"
 import { Role } from "@prisma/client"
-import { ButtonForm } from "@/components/Form"
+import prisma from "@/lib/prisma"
+import { EditUserForm } from "@/features/users/Forms/EditUserForm"
 
-export default function NewUserPage() {
+interface Props {
+  params: {
+    userId: string
+  }
+}
+
+export default async function EditUserPage({ params }: Props) {
+
+  const userData = await prisma.user.findUnique({
+    where: {
+      id: params.userId
+    },
+    select: {
+      id: true, 
+      email: true,
+      isActive: true,
+      name: true,
+      role: true,
+    }
+  })
+
   return (
     <div className="flex w-full flex-col h-full">
       <div className="flex flex-col sm:gap-4 sm:py-4">
-        <HeaderPageAddUser />
+        <HeaderPageEditUser />
 
 
         <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-[90%]">
-          <CreateUserForm>
+          <EditUserForm defaultValue={userData}>
 
             <div className="flex items-center gap-4 mb-2">
               <Button asChild variant="outline" size="icon" className="h-7 w-7">
@@ -35,7 +55,7 @@ export default function NewUserPage() {
               </Button>
 
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Agregar usuario
+                Editar usuario
               </h1>
               
             </div>
@@ -82,7 +102,7 @@ export default function NewUserPage() {
 
               </div>
             </div>
-            </CreateUserForm>
+            </EditUserForm>
             <div className="flex items-center justify-center gap-2 md:hidden">
               <Button variant="outline" size="sm">
                 Discard

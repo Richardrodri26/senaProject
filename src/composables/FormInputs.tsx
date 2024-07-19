@@ -1,6 +1,7 @@
+'use client'
 import { useFormContext } from "react-hook-form";
 import { formatDate } from "date-fns";
-import { CalendarIcon, CheckIcon, Trash2 } from "lucide-react";
+import { CalendarIcon, CheckIcon, EyeIcon, EyeOffIcon, Trash2 } from "lucide-react";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,6 +16,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 
 type InputFormBasicType = {
@@ -58,6 +60,37 @@ export const InputForm = ({
   );
 };
 
+interface InputPasswordFormInterface extends InputFormBasicType { }
+
+export const InputPasswordForm = ({
+  name,
+  label,
+  placeholder,
+  description,
+  className,
+  type = "password"
+}: InputPasswordFormInterface) => {
+  const { control } = useFormContext();
+  const [showPassword, setShowPassword] = useState(false)
+
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={cn("w-full flex-1", className)}>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <Input suffix={showPassword ? <EyeIcon onClick={() => setShowPassword(false)} /> : <EyeOffIcon onClick={() => setShowPassword(true)} />} placeholder={placeholder} {...field} type={showPassword ? 'text' : 'password'} />
+          </FormControl>
+          <FormDescription>{description}</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
+
 interface CheckboxFormInterface extends InputFormBasicType { }
 
 export const CheckBoxForm = ({
@@ -71,7 +104,7 @@ export const CheckBoxForm = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+        <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 shadow">
           <FormControl>
             <Checkbox checked={field.value} onCheckedChange={field.onChange} />
           </FormControl>

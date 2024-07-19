@@ -16,6 +16,7 @@ import {
 import { getMenuList } from "@/lib/menu-list";
 import { CollapseMenuButton } from "./Collapse-menu-button";
 import { ModeToggle } from "../ToggleThemeButton";
+import { signOut } from "@/auth.config";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -117,7 +118,7 @@ export function Menu({ isOpen }: MenuProps) {
                 <div className={cn("mt-auto w-full flex-1 flex items-center gap-2 justify-between", { "mt-0": isOpen === false })}>
                   <TooltipTrigger asChild>
                     <Button
-                      onClick={() => { router.replace("/") }}
+                      onClick={() => { signOut(); router.replace("/"); }}
                       variant="outline"
                       className="w-full justify-center"
                     >

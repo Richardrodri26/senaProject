@@ -1,6 +1,6 @@
+import { Toaster } from "sonner"
 import { ThemeProvider } from "./ThemeProvider"
-
-
+import { QueryProvider } from "./QueryProvider"
 
 
 export const GeneralProviders = ({ children }: { children: React.ReactNode }) => {
@@ -10,6 +10,13 @@ export const GeneralProviders = ({ children }: { children: React.ReactNode }) =>
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
-    >{children}</ThemeProvider>
+    >
+      <QueryProvider>
+
+        {children}
+
+      </QueryProvider>
+      <Toaster richColors />
+    </ThemeProvider>
   )
 }

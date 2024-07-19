@@ -17,14 +17,15 @@ export async function authenticate(
       callbackUrl: callbackUrl,
     });
 
-
   } catch (error) {
+
+    console.log('error', error)
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
           return "Invalid credentials.";
         default:
-          return "Something went wrong.";
+          return "Oops, hubo un error";
       }
     }
     throw error;

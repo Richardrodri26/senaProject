@@ -1,24 +1,44 @@
 "use client"
 import { BasicFormProviderZod, ButtonForm } from "@/components/Form"
 import { loginSchema, loginSchemaType } from "../schemas"
-import { InputForm } from "@/composables/FormInputs"
+import { InputForm, InputPasswordForm } from "@/composables/FormInputs"
 import { Label } from "@radix-ui/react-label"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { authenticate } from "@/actions"
-import { registerUser } from "@/actions/auth/register"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
 
 
 export const LoginForm = () => {
   const router = useRouter()
   const pathname = usePathname()
 
-  const onSubmit = async (data: loginSchemaType) => {
-    // await authenticate("", { ...data, callbackUrl: pathname })
-    // await authenticate({ ...data, callbackUrl: pathname })
-    await registerUser("Richard", "richard@gmail.com", "123456")
+  const mutation = useMutation({
+    mutationFn: async (data: loginSchemaType) => {
+      try {
+        const restAuth = await authenticate({ ...data, callbackUrl: pathname })
 
-    // router.push("/home")
+        if(!restAuth)  {
+          router.push("/home")
+        }
+        if(restAuth)  {
+          console.log('restAuth', restAuth)
+          toast.error(restAuth)
+        }
+
+  
+      } catch (error) {
+        toast.error('Oops, hubo un error al iniciar sesion')
+        console.error(error)
+      }
+  
+    }
+  })
+
+  const onSubmit = async (data: loginSchemaType) => {
+    mutation.mutate(data)
+
   }
 
   return (
@@ -35,7 +55,8 @@ export const LoginForm = () => {
 
         <InputForm name="email" label="Email" />
 
-        <InputForm name="password" type="password" label={<div className="flex items-center">
+        <InputPasswordForm name="password" type="password" label={'Contraseña'} />
+        {/* <InputPasswordForm name="password" type="password" label={<div className="flex items-center">
           <Label htmlFor="password">Contraseña</Label>
           <Link
             href="/recovery"
@@ -43,9 +64,9 @@ export const LoginForm = () => {
           >
             ¿Olvidaste tu contraseña?
           </Link>
-        </div>} />
+        </div>} /> */}
 
-        <ButtonForm className="w-full">
+        <ButtonForm disabled={mutation.isPending} className="w-full">
           Iniciar sesión
         </ButtonForm>
 

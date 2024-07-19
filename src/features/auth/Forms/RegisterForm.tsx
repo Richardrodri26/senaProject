@@ -1,39 +1,53 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+"use client"
+
+import { BasicFormProviderZod, ButtonForm } from "@/components/Form"
 import Link from "next/link"
+import { registerSchema, registerSchemaType } from "../schemas"
+import { useMutation } from '@tanstack/react-query'
+import { registerUser } from "@/actions"
+import { toast } from "sonner"
+import { InputForm, InputPasswordForm } from "@/composables/FormInputs"
+import { useRouter } from "next/navigation"
 
 
 export const RegisterForm = () => {
+  const router = useRouter()
+  const mutation = useMutation({
+    mutationFn: async (data: registerSchemaType) => {
+
+      try {
+        await registerUser(data.name, data.email, data.password)
+
+        router.push("/home")
+      } catch (error) {
+        toast.error('Oops, hubo un error al crear el usuario')
+      }
+
+    }
+  })
+
+  const onSubmit = async (data: registerSchemaType) => {
+    mutation.mutate(data)
+  }
+
+
+
   return (
-    <>
+    <BasicFormProviderZod className="p-0" submit={onSubmit} schema={registerSchema}>
       <div className="grid gap-4">
         <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="first-name">First name</Label>
-            <Input id="first-name" placeholder="Max" required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="last-name">Last name</Label>
-            <Input id="last-name" placeholder="Robinson" required />
-          </div>
+
+          <InputForm name="name" label={'Nombre'} placeholder="Ej: Juan" />
+          <InputForm name="email" label={'Correo electronico'} placeholder="Ej: correo@gmail.com" />
+
+          
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="m@example.com"
-            required
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" />
-        </div>
-        <Button type="submit" className="w-full">
-          Create an account
-        </Button>
+          <InputPasswordForm name="password" label={'Contraseña'} />
+          <InputPasswordForm name="confirmPassword" label={'Confirmar contraseña'} />
+        
+        <ButtonForm disabled={mutation.isPending} className="w-full">
+          Registrar usuario
+        </ButtonForm>
       </div>
       <div className="mt-4 text-center text-sm">
         Ya tienes una cuenta?{" "}
@@ -41,6 +55,6 @@ export const RegisterForm = () => {
           Iniciar sesion
         </Link>
       </div>
-    </>
+    </BasicFormProviderZod>
   )
 }

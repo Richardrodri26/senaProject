@@ -26,4 +26,15 @@ model User {
   password      String
   role          Role      @default(user)
   image         String?
+  isActive      Boolean   @default(true)
+  Profile       Profile?
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  bio       String?
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
