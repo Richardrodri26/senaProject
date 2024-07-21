@@ -62,7 +62,7 @@ export const PaginationTable = ({ metaDataPagination, skipState, takeValue }: IP
     const uniqueArray = combinedArray.filter((item, index) => combinedArray.indexOf(item) === index || item === '...');
 
     return uniqueArray;
-  }, [metaDataPagination]);
+  }, [currentPage, pageNumbers, totalPages]);
 
   return (
 
