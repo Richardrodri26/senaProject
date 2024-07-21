@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { HTMLAttributes } from 'react';
 import { Form } from '../ui/form';
-import { cn } from '@/lib/utils';
+import { cn, sleep } from '@/lib/utils';
 import { Button, ButtonProps } from '../ui/button';
 
 // Definimos un tipo auxiliar para DeepPartial que trabaje mejor con Zod
@@ -46,9 +46,13 @@ type DeepPartialWithZod<T extends z.ZodObject<any, any>> = {
     return <div className={cn('mb-2.5 flex w-full flex-1 gap-2.5', props.className)} {...props} />;
   };
 
-  export const ButtonForm = ({ disabled, ...rest }: ButtonProps) => {
-    const { formState: { isValid } } = useFormContext()
+  interface IButtonFormProps extends ButtonProps {
+    resetForm?: boolean
+  }
+
+  export const ButtonForm = ({ disabled, resetForm = false, onClick, ...rest }: IButtonFormProps) => {
+    const { formState: { isValid }, reset } = useFormContext()
     return (
-      <Button disabled={!isValid || disabled} {...rest}  />
+      <Button onClick={(e) => {onClick && onClick(e); resetForm && sleep().then(() => reset())}} disabled={!isValid || disabled} {...rest}  />
     )
   }

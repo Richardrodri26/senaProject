@@ -18,7 +18,10 @@ export async function editUser(user: editUserSchemaType) {
       data: {
         name: user.name,
         email: user.email,
-        role: user.role,
+        roles: {
+          deleteMany: {},
+          create: user.role.map(roleId => ({ roleId: roleId }))
+        },
         isActive: user.isActive,
       },
       select: {

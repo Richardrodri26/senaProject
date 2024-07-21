@@ -43,7 +43,7 @@ export const CreateUserForm = ({ children, defaultValue }: { children: React.Rea
 
   return (
     <>
-      <BasicFormProviderZod className="p-0" defaultValue={defaultValue || { role: Role.user, isActive: false }} submit={onSubmit} schema={createUserSchema}>
+      <BasicFormProviderZod className="p-0" defaultValue={defaultValue || { role: [], isActive: false }} submit={onSubmit} schema={createUserSchema}>
         {children}
         <ButtonForm disabled={mutation.isPending}>Guardar</ButtonForm>
       </BasicFormProviderZod>

@@ -76,13 +76,14 @@ export function getMenuList(pathname: string): Group[] {
             }
           ]
         },
-        // {
-        //   href: "/categories",
-        //   label: "Categories",
-        //   active: pathname.includes("/categories"),
-        //   icon: Bookmark,
-        //   submenus: []
-        // },
+
+        {
+          href: "/home/roles",
+          label: "Roles",
+          active: pathname === "/home/roles",
+          icon: Bookmark,
+          submenus: []
+        },
         // {
         //   href: "/tags",
         //   label: "Tags",

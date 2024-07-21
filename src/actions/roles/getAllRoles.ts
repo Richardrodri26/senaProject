@@ -9,38 +9,27 @@ interface IArgs {
   pagination: IPagination
 }
 
-export async function getAllUsers({ pagination }: IArgs) {
+export async function getAllRoles({ pagination }: IArgs) {
   const session = await auth();
 
   if (!session) throw new Error('Acceso no autorizado');
 
   // const offset = (page - 1) * limit;
   const { take, skip } = pagination
-  const [users, totalUsers] = await Promise.all([
-    prisma.user.findMany({
+  const [roles, totalRoles] = await Promise.all([
+    prisma.role.findMany({
       skip,
       take,
-      select: {
-        roles: {
-          select: {
-            id: true,
-            role: true
-          }
-        },
-        id: true,
-        name: true,
-        email: true,
-      }
     }),
-    prisma.user.count(),
+    prisma.role.count(),
   ]);
 
-  const totalPages = Math.ceil(totalUsers / take);
+  const totalPages = Math.ceil(totalRoles / take);
   const currentPage = Math.floor(skip / take) + 1;
 
   return {
-    users,
-    totalUsers,
+    roles,
+    totalRoles,
     totalPages,
     currentPage
   };

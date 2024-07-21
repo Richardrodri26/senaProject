@@ -11,12 +11,13 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, isUUID } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { MultiSelector, MultiSelectorContent, MultiSelectorInput, MultiSelectorItem, MultiSelectorList, MultiSelectorTrigger } from "@/components/MultiSelect";
 
 
 type InputFormBasicType = {
@@ -199,11 +200,11 @@ export const SelectForm = ({
         <FormItem className={className}>
           <FormLabel>{label}</FormLabel>
           <Select disabled={disabled} onValueChange={(value) => {
-              field.onChange(value);
-              if (onChange) {
-                onChange(value);
-              }
-            }} defaultValue={field.value}>
+            field.onChange(value);
+            if (onChange) {
+              onChange(value);
+            }
+          }} defaultValue={field.value}>
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />
@@ -446,3 +447,89 @@ export const ComboboxForm = ({
     />
   );
 };
+
+export interface IMultiSelectFormInterface extends InputFormBasicType {
+  options: { value: string; label: string }[];
+}
+
+export const MultiSelectForm = ({
+  name,
+  options,
+  className,
+  description,
+  label,
+  placeholder, }: IMultiSelectFormInterface) => {
+  const form = useFormContext();
+
+  const { optionsValueByLabel, optionsLabelByValue  } = useMemo(() => {
+
+      const optionsLabelByValue: Record<string, string> = options.reduce((prev, curr) => {
+      const newItem = {
+        ...prev,
+        [curr.value]: curr.label
+      }
+      return newItem
+    }, {})
+
+    const optionsValueByLabel: Record<string, string> = options.reduce((prev, curr) => {
+      const newItem = {
+        ...prev,
+        [curr.label]: curr.value
+      }
+      return newItem
+    }, {})
+
+    return {
+      optionsLabelByValue,
+      optionsValueByLabel,
+    }
+    
+
+  },[options])
+
+  const getMultiSelectValues = (values: string[]) => {
+    console.log('values', values)
+
+    return values?.map(value => {
+      
+      if(isUUID(value)) return optionsLabelByValue[value]
+      return optionsLabelByValue[optionsValueByLabel[value]]
+    })
+  }
+
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            {/* <MultiSelector onValuesChange={field.onChange} values={getMultiSelectValues(field.value as string[])}> */}
+            <MultiSelector onValuesChange={field.onChange} values={field.value}>
+              <MultiSelectorTrigger>
+                <MultiSelectorInput placeholder={placeholder} />
+              </MultiSelectorTrigger>
+
+              <MultiSelectorContent>
+                <MultiSelectorList>
+                  {options.map((option, index) => (
+                    <MultiSelectorItem key={index} value={option.value}>
+                      {option.label}
+                    </MultiSelectorItem>
+                  ))}
+                </MultiSelectorList>
+
+              </MultiSelectorContent>
+
+            </MultiSelector>
+          </FormControl>
+          <FormDescription>
+            {description}
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
+}

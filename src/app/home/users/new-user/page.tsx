@@ -16,6 +16,7 @@ import { CreateUserForm } from "@/features/users/Forms/CreateUserForm"
 import { CheckBoxForm, InputForm, SelectForm } from "@/composables/FormInputs"
 import { Role } from "@prisma/client"
 import { ButtonForm } from "@/components/Form"
+import { RoleSelect } from "@/features/generalFeatures"
 
 export default function NewUserPage() {
   return (
@@ -75,7 +76,7 @@ export default function NewUserPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-6">
-                      <SelectForm name="role" options={[{ key: Role.user, value: "Usuario" }, { key: Role.admin, value: 'Administrador' }]} />
+                      <RoleSelect name="role" />
                     </div>
                   </CardContent>
                 </Card>

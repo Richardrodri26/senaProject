@@ -16,7 +16,10 @@ export async function createUser(user: createUserSchemaType) {
       data: {
         name: user.name,
         email: user.email,
-        role: user.role,
+        // role: user.role,
+        roles: {
+          create: user.role.map(roleId => ({ roleId: roleId }))
+        },
         isActive: user.isActive,
         password: bcryptjs.hashSync( '123456' )
       },

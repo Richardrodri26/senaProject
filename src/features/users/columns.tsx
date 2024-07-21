@@ -1,10 +1,17 @@
-import { type User } from "@prisma/client";
 import { createColumnHelper } from "@tanstack/react-table";
 import { UsersTdActions } from "./elements/ClientElements";
+import { Role, User, UserRole } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
 
 
+interface IRoleGrid extends UserRole {
+  role: Role
+}
+export interface UsersGrid extends User {
+  roles: IRoleGrid[]
+}
 
-const columnHelperUsers = createColumnHelper<User>();
+const columnHelperUsers = createColumnHelper<UsersGrid>();
 
 export const userColumns = [
   columnHelperUsers.accessor('name', {
@@ -13,8 +20,9 @@ export const userColumns = [
   columnHelperUsers.accessor('email', {
     header: "Email del usuario"
   }),
-  columnHelperUsers.accessor('role', {
-    header: "Rol del usuario"
+  columnHelperUsers.accessor('roles', {
+    header: "Rol del usuario",
+    cell: ({ getValue }) => getValue().map(role => <Badge>{role?.role?.name}</Badge>)
   }),
 
   columnHelperUsers.display({

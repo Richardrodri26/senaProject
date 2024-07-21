@@ -13,9 +13,10 @@ import {
 import { HeaderPageEditUser } from "@/features/users/elements/HeaderPage"
 import Link from "next/link"
 import { CheckBoxForm, InputForm, SelectForm } from "@/composables/FormInputs"
-import { Role } from "@prisma/client"
+// import { Role } from "@prisma/client"
 import prisma from "@/lib/prisma"
 import { EditUserForm } from "@/features/users/Forms/EditUserForm"
+import { RoleSelect } from "@/features/generalFeatures"
 
 interface Props {
   params: {
@@ -34,7 +35,7 @@ export default async function EditUserPage({ params }: Props) {
       email: true,
       isActive: true,
       name: true,
-      role: true,
+      roles: true
     }
   })
 
@@ -95,7 +96,8 @@ export default async function EditUserPage({ params }: Props) {
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-6">
-                      <SelectForm name="role" options={[{ key: Role.user, value: "Usuario" }, { key: Role.admin, value: 'Administrador' }]} />
+                      <RoleSelect name="role" />
+                      {/* <SelectForm name="role" options={[{ key: Role.user, value: "Usuario" }, { key: Role.admin, value: 'Administrador' }]} /> */}
                     </div>
                   </CardContent>
                 </Card>
