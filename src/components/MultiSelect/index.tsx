@@ -7,7 +7,7 @@ import {
   CommandEmpty,
   CommandList,
 } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
+import { cn, isUUID } from "@/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
 import { X as RemoveIcon, Check } from "lucide-react";
 import React, {
@@ -16,6 +16,7 @@ import React, {
   forwardRef,
   useCallback,
   useContext,
+  useMemo,
   useState,
 } from "react";
 
@@ -153,14 +154,53 @@ const MultiSelector = ({
 
 const MultiSelectorTrigger = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & {
+    options: {
+      value: string;
+      label: string;
+    }[]
+  }
+>(({ className, children, options, ...props }, ref) => {
   const { value, onValueChange, activeIndex } = useMultiSelect();
 
   const mousePreventDefault = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   }, []);
+
+  const { optionsValueByLabel, optionsLabelByValue } = useMemo(() => {
+
+    const optionsLabelByValue: Record<string, string> = options.reduce((prev, curr) => {
+      const newItem = {
+        ...prev,
+        [curr.value]: curr.label
+      }
+      return newItem
+    }, {})
+
+    const optionsValueByLabel: Record<string, string> = options.reduce((prev, curr) => {
+      const newItem = {
+        ...prev,
+        [curr.label]: curr.value
+      }
+      return newItem
+    }, {})
+
+    return {
+      optionsLabelByValue,
+      optionsValueByLabel,
+    }
+
+
+  }, [options])
+
+  const getMultiSelectValue = (value: string) => {
+    
+      
+    if(isUUID(value)) return optionsLabelByValue[value]
+    return optionsLabelByValue[optionsValueByLabel[value]]
+}
+
 
   return (
     <div
@@ -180,15 +220,15 @@ const MultiSelectorTrigger = forwardRef<
           )}
           variant={"secondary"}
         >
-          <span className="text-xs">{item}</span>
+          <span className="text-xs">{getMultiSelectValue(item)}</span>
           <button
-            aria-label={`Remove ${item} option`}
+            aria-label={`Remove ${getMultiSelectValue(item)} option`}
             aria-roledescription="button to remove option"
             type="button"
             onMouseDown={mousePreventDefault}
             onClick={() => onValueChange(item)}
           >
-            <span className="sr-only">Remove {item} option</span>
+            <span className="sr-only">Remove {getMultiSelectValue(item)} option</span>
             <RemoveIcon className="h-4 w-4 hover:stroke-destructive" />
           </button>
         </Badge>

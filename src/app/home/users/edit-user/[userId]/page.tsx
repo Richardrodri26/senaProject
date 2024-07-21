@@ -39,6 +39,11 @@ export default async function EditUserPage({ params }: Props) {
     }
   })
 
+  const defaultData = {
+    ...userData,
+    role: userData?.roles?.map(role => role.roleId)
+  }
+  
   return (
     <div className="flex w-full flex-col h-full">
       <div className="flex flex-col sm:gap-4 sm:py-4">
@@ -47,7 +52,7 @@ export default async function EditUserPage({ params }: Props) {
 
         <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4 w-[90%]">
-          <EditUserForm defaultValue={userData}>
+          <EditUserForm defaultValue={defaultData}>
 
             <div className="flex items-center gap-4 mb-2">
               <Button asChild variant="outline" size="icon" className="h-7 w-7">

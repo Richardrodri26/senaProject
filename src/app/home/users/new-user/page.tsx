@@ -13,9 +13,7 @@ import {
 import { HeaderPageAddUser } from "@/features/users/elements/HeaderPage"
 import Link from "next/link"
 import { CreateUserForm } from "@/features/users/Forms/CreateUserForm"
-import { CheckBoxForm, InputForm, SelectForm } from "@/composables/FormInputs"
-import { Role } from "@prisma/client"
-import { ButtonForm } from "@/components/Form"
+import { CheckBoxForm, InputForm } from "@/composables/FormInputs"
 import { RoleSelect } from "@/features/generalFeatures"
 
 export default function NewUserPage() {

@@ -6,6 +6,7 @@ import { useState } from "react"
 import { columnsRole } from "./columns"
 import { PaginationTable } from "@/components/TableElements"
 import { getAllRoles } from "@/actions"
+import { RoleGridAlternative } from "./AlternativeGrid"
 
 const takeValue = 10
 
@@ -31,7 +32,8 @@ export const AllRolesGrid = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DataTable columns={columnsRole as any} data={data?.roles || []} isLoading={!data && isLoading} />
+          {/* <DataTable columns={columnsRole as any} data={data?.roles || []} isLoading={!data && isLoading} /> */}
+          <RoleGridAlternative data={data?.roles || []} />
         </CardContent>
         <CardFooter>
           {!data && isLoading

@@ -22,7 +22,7 @@ export const userColumns = [
   }),
   columnHelperUsers.accessor('roles', {
     header: "Rol del usuario",
-    cell: ({ getValue }) => getValue().map(role => <Badge>{role?.role?.name}</Badge>)
+    cell: ({ getValue }) => getValue().slice(0,3).map((role, index) => <Badge className="mr-2" key={index}>{role?.role?.name}</Badge>)
   }),
 
   columnHelperUsers.display({

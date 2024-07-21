@@ -8,16 +8,7 @@ import Link from "next/link";
 
 export default function RolesPage() {
   return (
-    <div className="flex flex-col gap-5">
-       <div className="py-2 w-full flex justify-end items-center gap-2">
-       
-        <Link href={'/home/roles/new-role'} className={buttonVariants({ size: 'sm', })}>
-          <PlusCircle className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Añadir rol
-          </span>
-        </Link>
-      </div>
+    <div className="flex flex-col gap-5 pt-5">
 
       <AllRolesGrid />
 

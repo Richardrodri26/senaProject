@@ -461,42 +461,6 @@ export const MultiSelectForm = ({
   placeholder, }: IMultiSelectFormInterface) => {
   const form = useFormContext();
 
-  const { optionsValueByLabel, optionsLabelByValue  } = useMemo(() => {
-
-      const optionsLabelByValue: Record<string, string> = options.reduce((prev, curr) => {
-      const newItem = {
-        ...prev,
-        [curr.value]: curr.label
-      }
-      return newItem
-    }, {})
-
-    const optionsValueByLabel: Record<string, string> = options.reduce((prev, curr) => {
-      const newItem = {
-        ...prev,
-        [curr.label]: curr.value
-      }
-      return newItem
-    }, {})
-
-    return {
-      optionsLabelByValue,
-      optionsValueByLabel,
-    }
-    
-
-  },[options])
-
-  const getMultiSelectValues = (values: string[]) => {
-    console.log('values', values)
-
-    return values?.map(value => {
-      
-      if(isUUID(value)) return optionsLabelByValue[value]
-      return optionsLabelByValue[optionsValueByLabel[value]]
-    })
-  }
-
   return (
     <FormField
       control={form.control}
@@ -507,7 +471,7 @@ export const MultiSelectForm = ({
           <FormControl>
             {/* <MultiSelector onValuesChange={field.onChange} values={getMultiSelectValues(field.value as string[])}> */}
             <MultiSelector onValuesChange={field.onChange} values={field.value}>
-              <MultiSelectorTrigger>
+              <MultiSelectorTrigger options={options}>
                 <MultiSelectorInput placeholder={placeholder} />
               </MultiSelectorTrigger>
 
